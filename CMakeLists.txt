@@ -70,6 +70,18 @@ add_subdirectory(tests)
 
 ############## Third-party Libraries #####################
 
+FetchContent_Declare(
+        reactphysics3d
+        GIT_REPOSITORY https://github.com/DanielChappuis/reactphysics3d.git
+        GIT_TAG v0.7.1
+)
+
+FetchContent_GetProperties(reactphysics3d)
+if(NOT reactphysics3d_POPULATED)
+    FetchContent_Populate(reactphysics3d)
+    add_subdirectory(${reactphysics3d_SOURCE_DIR} ${reactphysics3d_BINARY_DIR})
+endif()
+
 # Testing library. Header-only.
 FetchContent_Declare(
     catch2

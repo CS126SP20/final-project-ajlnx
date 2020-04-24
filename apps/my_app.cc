@@ -4,6 +4,7 @@
 
 #include <CinderFreenect.h>
 #include <cinder/app/App.h>
+#include <reactphysics3d.h>
 
 namespace myapp {
 
