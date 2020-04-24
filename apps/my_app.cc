@@ -2,8 +2,8 @@
 
 #include "my_app.h"
 
+#include <CinderFreenect.h>
 #include <cinder/app/App.h>
-
 
 namespace myapp {
 
@@ -11,7 +11,9 @@ using cinder::app::KeyEvent;
 
 MyApp::MyApp() { }
 
-void MyApp::setup() { }
+void MyApp::setup() {
+
+}
 
 void MyApp::update() { }
 
