@@ -6,6 +6,7 @@
 #include "mylibrary/engine.h"
 #include "Box2D/Box2D.h"
 #include "cinder/gl/gl.h"
+#include "CinderImGui.h"
 
 namespace myapp {
 
@@ -25,9 +26,11 @@ MyApp::MyApp()
   : leaderboard_{cinder::app::getAssetPath(kDbPath).string()} { }
 
 void MyApp::setup() {
+  ImGui::initialize();
   fallingBalls::Player player = fallingBalls::Player("Andy", 0);
   engine = new fallingBalls::Engine( 0.0f, 5.0f, player);
-
+  engine->gameStarted_ = false;
+  viewing_scores_ = false;
 }
 
 void MyApp::update() {
@@ -46,16 +49,35 @@ void MyApp::update() {
     }
     return;
   }
-  engine->Step();
+
+  if (engine->gamePaused_) {
+    return;
+  }
+
+  if (engine->gameStarted_) {
+    engine->Step();
+  }
+
 }
 
 void MyApp::draw() {
   if (engine->gameEnded_) {
     if (!printed_game_over_) cinder::gl::clear(Color(0, 0, 0));
     DrawGameOver();
+    DrawMenu();
     return;
   }
+
+  if(viewing_scores_) {
+    if (!printed_high_scores_) cinder::gl::clear(Color(0, 0, 0));
+    DrawHighScores();
+    DrawMenu();
+    return;
+  }
+
   gl::clear();
+  DrawMenu();
+
   gl::color(1,1,1);
   engine->drawBodies();
 
@@ -63,6 +85,53 @@ void MyApp::draw() {
   //gl::color(1,0,0);
   //engine->getPlayer().drawPlayer();
 
+}
+void MyApp::DrawMenu() {
+  bool my_tool_active = true;
+  ImGui::Begin("Main Menu", &my_tool_active);
+  ImGui::TextColored(ImVec4(1,1,0,1), "Welcome to Falling Balls!");
+  if (ImGui::Button("Start"))
+  {
+    if (viewing_scores_) {
+      viewing_scores_ = false;
+    }
+    engine->gameStarted_ = true;
+    ImGui::SetWindowCollapsed(true);
+  }
+
+  if (ImGui::Button("Pause"))
+  {
+    if (viewing_scores_ || !engine->gameStarted_) {
+      return;
+    }
+    engine->pauseGame();
+    ImGui::SetWindowCollapsed(true);
+  }
+
+  if (ImGui::Button("Resume"))
+  {
+    if (viewing_scores_ || !engine->gameStarted_) {
+      return;
+    }
+    engine->resumeGame();
+    ImGui::SetWindowCollapsed(true);
+  }
+
+  if (ImGui::Button("Reset"))
+  {
+    if (viewing_scores_ || !engine->gameStarted_) {
+      return;
+    }
+    engine->reset();
+    ImGui::SetWindowCollapsed(true);
+  }
+
+  if (ImGui::Button("View Highscores"))
+  {
+    viewing_scores_ = true;
+    ImGui::SetWindowCollapsed(true);
+  }
+  ImGui::End();
 }
 
 void MyApp::keyDown(KeyEvent event) {
@@ -139,6 +208,31 @@ void MyApp::DrawGameOver() {
   }
 
   printed_game_over_ = true;
+}
+
+void MyApp::DrawHighScores() {
+  // Lazily print.
+  if (printed_high_scores_) return;
+
+  const cinder::vec2 center = getWindowCenter();
+  const cinder::ivec2 size = {500, 50};
+  const Color color = Color::white();
+
+  top_players_ = leaderboard_.RetrieveHighScores(kLimit);
+  if (top_players_.empty()) {
+    PrintText("No High Scores Yet!", color, size, center);
+    return;
+  }
+
+  size_t row = 0;
+  PrintText("High Scores", color, size, center);
+  for (const fallingBalls::Player& player : top_players_) {
+    std::stringstream ss;
+    ss << player.name << " - " << player.score << " sec";
+    PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
+  }
+
+  printed_high_scores_ = true;
 }
 
 }  // namespace myapp

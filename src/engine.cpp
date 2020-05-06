@@ -47,6 +47,7 @@ Engine::Engine(float x_gravity, float y_gravity, Player player)
   last_ball_spawn = time_started;
   ball_spawn_rate = 1;
   num_balls_spawned = 0;
+  seconds_paused = 0;
 }
 
 void Engine::Step() {
@@ -91,7 +92,7 @@ void Engine::Step() {
         if (b2CircleShape* c =
             dynamic_cast<b2CircleShape*>(touching->GetShape())) {
           gameEnded_ = true;
-          player_.score = duration_cast<seconds>(system_clock::now() - time_started).count();
+          player_.score = duration_cast<seconds>(system_clock::now() - time_started).count() - seconds_paused;
           break;
         }
       }
@@ -167,6 +168,53 @@ void Engine::movePlayer(int direction) {
 
     tmp = tmp->GetNext();
   }
+}
+void Engine::pauseGame() {
+  gamePaused_ = true;
+  time_paused = system_clock::now();
+}
+void Engine::resumeGame() {
+  gamePaused_ = false;
+  seconds_paused = duration_cast<seconds>(system_clock::now() - time_paused).count();
+}
+void Engine::reset() {
+  b2Body* tmp = world->GetBodyList();
+  while (tmp) {
+    b2Body* next = tmp->GetNext();
+    world->DestroyBody(tmp);
+    tmp = next;
+  }
+
+  // Add ground
+  b2BodyDef groundBodyDef;
+  groundBodyDef.type = b2_staticBody;
+  groundBodyDef.userData = (void *)"ground";
+  groundBodyDef.position.Set(400.0f / PPM, 810.0f / PPM);
+  b2Body* groundBody = world->CreateBody(&groundBodyDef);
+
+  b2PolygonShape groundBox;
+  groundBox.SetAsBox(400.0f / PPM, 10.0f / PPM);
+  groundBody->CreateFixture(&groundBox, 0.0f);
+
+  // Add player
+  b2BodyDef playerBodyDef;
+  playerBodyDef.userData = (void *)"player";
+  playerBodyDef.type = b2_dynamicBody;
+  playerBodyDef.position.Set(400.0f / PPM, 400.0f / PPM);
+  b2Body* playerBody = world->CreateBody(&playerBodyDef);
+
+  b2PolygonShape playerBox;
+  playerBox.SetAsBox(15.0f / PPM, 15.0f / PPM);
+  b2FixtureDef fixtureDef;
+  fixtureDef.shape = &playerBox;
+  fixtureDef.friction = 0;
+  playerBody->CreateFixture(&fixtureDef);
+
+  time_started = system_clock::now();
+  last_ball_spawn = time_started;
+  ball_spawn_rate = 1;
+  num_balls_spawned = 0;
+  seconds_paused = 0;
 }
 
 } // namespace

@@ -5,6 +5,7 @@
 
 #include <Box2D/Box2D.h>
 #include <cinder/app/App.h>
+#include <imgui.h>
 #include <mylibrary/leaderboard.h>
 
 namespace myapp {
@@ -20,6 +21,7 @@ class MyApp : public cinder::app::App {
   void mouseDrag(cinder::app::MouseEvent event) override;
   void DrawGameOver();
   bool printed_game_over_;
+  bool printed_high_scores_;
   template <typename C>
   void PrintText(const std::string& text, const C& color,
                  const glm::ivec2& size, const glm::vec2& loc);
@@ -28,7 +30,10 @@ class MyApp : public cinder::app::App {
   fallingBalls::LeaderBoard leaderboard_;
   std::vector<fallingBalls::Player> top_players_;
   std::vector<fallingBalls::Player> current_player_scores_;
+  bool viewing_scores_;
 
+  void DrawHighScores();
+  void DrawMenu();
 };
 
 }  // namespace myapp
