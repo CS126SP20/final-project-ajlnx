@@ -5,19 +5,19 @@ file(GLOB SOURCE_LIST CONFIGURE_DEPENDS
         "${FinalProject_SOURCE_DIR}/apps/*.h"
         "${FinalProject_SOURCE_DIR}/apps/*.hpp"
         "${FinalProject_SOURCE_DIR}/apps/*.cc"
-        "${FinalProject_SOURCE_DIR}/apps/*.cpp")
+        "${FinalProject_SOURCE_DIR}/apps/*.cpp"
+        "${FinalProject_SOURCE_DIR}/src/*.cpp")
 
 
 ci_make_app(
     APP_NAME    cinder-myapp
     CINDER_PATH ${CINDER_PATH}
     SOURCES     ${SOURCE_LIST}
-    LIBRARIES   mylibrary reactphysics3d
-    BLOCKS  Cinder-Kinect
+    LIBRARIES   mylibrary
+    BLOCKS  Box2D Cinder-Kinect
 )
 
 target_compile_features(cinder-myapp PRIVATE cxx_std_14)
-
 # Cross-platform compiler lints
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
         OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

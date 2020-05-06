@@ -19,8 +19,8 @@ ci_make_library(
         CINDER_PATH  ${CINDER_PATH}
         SOURCES      ${SOURCE_LIST}
         INCLUDES     "${FinalProject_SOURCE_DIR}/include"
-        LIBRARIES
-        BLOCKS  Cinder-Kinect
+        LIBRARIES   sqlite-modern-cpp sqlite3
+        BLOCKS  Cinder-Kinect Box2D
 )
 
 # All users of this library will need at least C++14
