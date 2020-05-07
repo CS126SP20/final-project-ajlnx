@@ -48,6 +48,7 @@ class Engine {
   bool isStarted() const;
   bool isTwoPlayer() const;
   bool canSpawnBall() const;
+  bool isTeleportEnabled() const;
   Player getPlayer() const;
 
   void Step();
@@ -59,6 +60,8 @@ class Engine {
   void resumeGame();
   void startGame();
   void start2PGame();
+  void enableTeleport();
+  void disableTeleport();
 
   b2World* world;
   GameState state_;
@@ -79,6 +82,7 @@ class Engine {
   int num_balls_spawned{};
   bool hasStarted{};
   bool is_two_player_{};
+  bool is_teleport_mode_{};
   bool can_spawn_ball_{};
 };
 

@@ -120,6 +120,24 @@ void MyApp::DrawMenu() {
     }
   }
 
+  if (engine->state_ == fallingBalls::GameState::kPaused &&
+      engine->isStarted() && !engine->isTeleportEnabled()) {
+    if (ImGui::Button("Enable Teleport Mode")) {
+      engine->resumeGame();
+      engine->enableTeleport();
+      ImGui::SetWindowCollapsed(true);
+    }
+  }
+
+  if (engine->state_ == fallingBalls::GameState::kPaused &&
+      engine->isStarted() && engine->isTeleportEnabled()) {
+    if (ImGui::Button("Disable Teleport Mode")) {
+      engine->resumeGame();
+      engine->disableTeleport();
+      ImGui::SetWindowCollapsed(true);
+    }
+  }
+
   if (!engine->isStarted() && !viewing_scores_) {
     if (ImGui::Button("View Highscores")) {
       viewing_scores_ = true;

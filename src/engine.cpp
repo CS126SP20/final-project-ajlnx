@@ -167,6 +167,16 @@ Player Engine::getPlayer() const {
 
 bool Engine::isTwoPlayer() const { return is_two_player_; }
 
+bool Engine::isTeleportEnabled() const { return is_teleport_mode_; }
+
+void Engine::enableTeleport() {
+  is_teleport_mode_ = true;
+}
+
+void Engine::disableTeleport() {
+  is_teleport_mode_ = false;
+}
+
 bool Engine::canSpawnBall() const { return can_spawn_ball_; }
 
 bool Engine::isStarted() const { return hasStarted; }
@@ -201,6 +211,7 @@ void Engine::initialize() {
   num_balls_spawned = 0;
   seconds_paused = 0;
   state_ = GameState::kPaused;
+  is_teleport_mode_ = false;
 }
 
 void Engine::updateBodies() {
@@ -213,10 +224,26 @@ void Engine::updateBodies() {
     b2Vec2 position = body->GetPosition();
 
     if(body->GetUserData() == "player") {
-      if (position.x > (kWIDTH - kPLAYER_SIZE) / PPM) {
-        body->SetLinearVelocity(b2Vec2(0, 0));
+      int offset = (kWIDTH - kPLAYER_SIZE);
+      int height = (kHEIGHT - (kPLAYER_SIZE /2));
+      if (position.x > offset / PPM) {
+        if (is_teleport_mode_) {
+          body->SetTransform(b2Vec2(kPLAYER_SIZE / PPM,
+                                    height / PPM), 0);
+        } else {
+          body->SetLinearVelocity(b2Vec2(0, 0));
+          body->SetTransform(b2Vec2(offset / PPM,
+                                    height / PPM), 0);
+        }
       } else if (position.x < kPLAYER_SIZE / PPM) {
-        body->SetLinearVelocity(b2Vec2(0, 0));
+        if (is_teleport_mode_) {
+          body->SetTransform(b2Vec2(offset / PPM,
+                                    height / PPM), 0);
+        } else {
+          body->SetLinearVelocity(b2Vec2(0, 0));
+          body->SetTransform(b2Vec2(kPLAYER_SIZE / PPM,
+                                    height / PPM), 0);
+        }
       }
     }
 
