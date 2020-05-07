@@ -4,8 +4,8 @@
 [![docs](https://img.shields.io/badge/docs-yes-brightgreen)](docs/README.md)\
 **Author**: Andy Lennox - [`alennox3@illinois.edu`](mailto:alennox3@illinois.edu)
 
-![](https://imgur.com/alTK9vJ)\
-![](https://imgur.com/ViCT5wR)
+![](https://i.imgur.com/alTK9vJ.gif)
+![](https://imgur.com/ViCT5wR.png)
 
 ## Dependencies
  - [gcc] or [clang]
