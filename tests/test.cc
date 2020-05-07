@@ -47,26 +47,26 @@ TEST_CASE("Game Engine", "[engine][player]") {
     REQUIRE(engine.getPlayer().name == "test");
     REQUIRE(engine.getPlayer().score == 0);
     REQUIRE(engine.state_ == GameState::kPaused);
-    REQUIRE(engine.isStarted() == false);
+    REQUIRE(!engine.isStarted());
   }
 
   SECTION("Start 1P Game") {
     engine.startGame();
-    REQUIRE(engine.isStarted() == true);
-    REQUIRE(engine.isTwoPlayer() == false);
+    REQUIRE(engine.isStarted());
+    REQUIRE(!engine.isTwoPlayer());
     REQUIRE(engine.state_ == GameState::kPlaying);
   }
 
   SECTION("Reset Game") {
     engine.reset();
     REQUIRE(engine.state_ == GameState::kPaused);
-    REQUIRE(engine.isStarted() == false);
+    REQUIRE(!engine.isStarted());
   }
 
   SECTION("Start 2P Game") {
     engine.start2PGame();
-    REQUIRE(engine.isStarted() == true);
-    REQUIRE(engine.isTwoPlayer() == true);
+    REQUIRE(engine.isStarted());
+    REQUIRE(engine.isTwoPlayer());
     REQUIRE(engine.state_ == GameState::kPlaying);
   }
 
@@ -95,14 +95,14 @@ TEST_CASE("Game Engine", "[engine][player]") {
     engine.addCircle(0, 400, 30, 1, .3);
     std::chrono::time_point<std::chrono::system_clock> last_ball_spawn
     = system_clock::now();
-    REQUIRE(engine.canSpawnBall() == false);
+    REQUIRE(!engine.canSpawnBall());
 
     while (duration_cast<seconds>(system_clock::now() - last_ball_spawn).count()
         < 10) {
       engine.Step();
     }
 
-    REQUIRE(engine.canSpawnBall() == true);
+    REQUIRE(engine.canSpawnBall());
   }
 
   SECTION("Move Player") {
