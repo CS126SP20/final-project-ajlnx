@@ -13,6 +13,8 @@
 
 namespace fallingBalls {
 
+
+// REUSED FROM SNAKE
 class LeaderBoard {
  public:
   // Creates a new leaderboard table if it doesn't already exist.

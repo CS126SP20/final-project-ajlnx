@@ -12,6 +12,8 @@ namespace fallingBalls {
 using std::string;
 using std::vector;
 
+// REUSED FROM SNAKE
+
 LeaderBoard::LeaderBoard(const string& db_path) : db_{db_path} {
   db_ << "CREATE TABLE if not exists leaderboard (\n"
          "  name  TEXT NOT NULL,\n"

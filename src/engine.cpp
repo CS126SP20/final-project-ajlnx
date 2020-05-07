@@ -98,6 +98,7 @@ void Engine::drawBodies() {
       break;
     }
 
+    // draw balls
     b2Vec2 position = body->GetPosition();
     if (b2CircleShape* c =
         dynamic_cast<b2CircleShape*>(body->GetFixtureList()->GetShape())) {
@@ -106,6 +107,7 @@ void Engine::drawBodies() {
                        position.y * PPM), c->m_radius * PPM);
     }
 
+    // draw player
     if (body->GetUserData() == "player") {
       float x = position.x * PPM;
       float y = position.y * PPM;
@@ -122,11 +124,14 @@ void Engine::drawBodies() {
 void Engine::Step() {
   world->Step(kTIME_STEP, kVELOCITY_ITERATIONS, kPOSITION_ITERATIONS);
 
+  // decrease time between ball spawns if kRATE_INCREASE_INTERVAL
+  // balls have spawned
   if (num_balls_spawned == kRATE_INCREASE_INTERVAL) {
     ball_spawn_rate -= kSPAWN_RATE_DECREASE;
     num_balls_spawned = 0;
   }
 
+  // spawn ball or allow player 2 to spawn ball if game is 2 player
   if (duration_cast<seconds>(system_clock::now() - last_ball_spawn).count()
   > ball_spawn_rate) {
     if (is_two_player_) {
@@ -223,6 +228,7 @@ void Engine::updateBodies() {
     b2Body* next = body->GetNext();
     b2Vec2 position = body->GetPosition();
 
+    // restrict player from leaving screen
     if(body->GetUserData() == "player") {
       int offset = (kWIDTH - kPLAYER_SIZE);
       int height = (kHEIGHT - (kPLAYER_SIZE /2));
@@ -247,11 +253,13 @@ void Engine::updateBodies() {
       }
     }
 
+    // delete off screen balls
     if (position.x > kWIDTH / PPM || position.x < 0.0f / PPM) {
         world->DestroyBody(body);
         body = next;
     }
 
+    // check if ball touched player
     if (body->GetUserData() == "player") {
       for (b2ContactEdge* edge = body->GetContactList(); edge;
            edge = edge->next) {

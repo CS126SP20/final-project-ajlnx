@@ -13,6 +13,8 @@ namespace myapp {
 class MyApp : public cinder::app::App {
 
   const float kPLAYER_SPEED = 7.5;
+
+  // how low can player 2 click
   const int kBALL_SPAWN_MIN_HEIGHT = 200;
 
  public:
@@ -22,7 +24,7 @@ class MyApp : public cinder::app::App {
   void draw() override;
   void keyDown(cinder::app::KeyEvent) override;
   void mouseDown(cinder::app::MouseEvent event) override;
-  void DrawGameOver();
+
   bool printed_game_over_;
   bool printed_high_scores_;
   template <typename C>
@@ -35,8 +37,14 @@ class MyApp : public cinder::app::App {
   std::vector<fallingBalls::Player> current_player_scores_;
   bool viewing_scores_;
 
+  // draw leaderboard
+  void DrawGameOver();
   void DrawHighScores();
+
+  // draw main menu
   void DrawMenu();
+
+  // reset booleans when appropriate due to menu selections
   void resetDrawings();
 };
 

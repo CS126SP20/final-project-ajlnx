@@ -17,9 +17,7 @@ using namespace ci::app;
 const char kDbPath[] = "fallingBalls.db";
 const char kNormalFont[] = "Arial";
 const size_t kLimit = 3;
-
 fallingBalls::Engine* engine;
-
 
 MyApp::MyApp()
   : leaderboard_{cinder::app::getAssetPath(kDbPath).string()} { }
@@ -168,6 +166,8 @@ void MyApp::mouseDown(MouseEvent event) {
     if (y > kBALL_SPAWN_MIN_HEIGHT) {
       y = kBALL_SPAWN_MIN_HEIGHT;
     }
+
+    // spawn ball at cursor with random radius
     float radius = engine->kBALL_MIN_RADIUS + static_cast <float> (rand())
         / ( static_cast <float> (RAND_MAX/(engine->kBALL_MAX_RADIUS
         - engine->kBALL_MIN_RADIUS)));
@@ -175,6 +175,7 @@ void MyApp::mouseDown(MouseEvent event) {
   }
 }
 
+// REUSED FROM SNAKE PROJECT
 template <typename C>
 void MyApp::PrintText(const std::string& text, const C& color,
     const cinder::ivec2& size,
@@ -197,6 +198,7 @@ void MyApp::PrintText(const std::string& text, const C& color,
   cinder::gl::draw(texture, locp);
 }
 
+//REUSED FROM SNAKE PROJECT
 void MyApp::DrawGameOver() {
   // Lazily print.
   if (printed_game_over_) return;
@@ -230,6 +232,7 @@ void MyApp::DrawGameOver() {
   printed_game_over_ = true;
 }
 
+// draw high scores from menu select
 void MyApp::DrawHighScores() {
   // Lazily print.
   if (printed_high_scores_) return;
@@ -255,6 +258,7 @@ void MyApp::DrawHighScores() {
   printed_high_scores_ = true;
 }
 
+// reset bools leaderboard can be drawn after viewing before game
 void MyApp::resetDrawings() {
   top_players_ = {};
   viewing_scores_ = false;
