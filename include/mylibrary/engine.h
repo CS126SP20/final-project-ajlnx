@@ -5,12 +5,14 @@
 #ifndef FINALPROJECT_ENGINE_H
 #define FINALPROJECT_ENGINE_H
 
+
+#include "player.h"
+
 #include <Box2D/Box2D.h>
 
 #include <chrono>
 
-#include "direction.h"
-#include "player.h"
+
 
 namespace fallingBalls {
 

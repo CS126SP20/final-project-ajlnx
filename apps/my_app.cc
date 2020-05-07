@@ -1,12 +1,12 @@
 // Copyright (c) 2020 Andy Lennox. All rights reserved.
 
 #include "my_app.h"
+#include "mylibrary/engine.h"
 
 #include <cinder/app/App.h>
-#include "mylibrary/engine.h"
-#include "Box2D/Box2D.h"
-#include "cinder/gl/gl.h"
-#include "CinderImGui.h"
+#include <Box2D/Box2D.h>
+#include <cinder/gl/gl.h>
+#include <CinderImGui.h>
 
 namespace myapp {
 
@@ -150,9 +150,9 @@ void MyApp::mouseDown(MouseEvent event) {
     if (y > kBALL_SPAWN_MIN_HEIGHT) {
       y = kBALL_SPAWN_MIN_HEIGHT;
     }
-    float radius = engine->kMIN_BALL_HEIGHT + static_cast <float> (rand())
+    float radius = engine->kBALL_MIN_RADIUS + static_cast <float> (rand())
         / ( static_cast <float> (RAND_MAX/(engine->kBALL_MAX_RADIUS
-        - engine->kMIN_BALL_HEIGHT)));
+        - engine->kBALL_MIN_RADIUS)));
     engine->addCircle(x, y, radius, 1, .3);
   }
 }

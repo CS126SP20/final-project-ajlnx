@@ -164,8 +164,11 @@ void Engine::movePlayer(double direction) {
 Player Engine::getPlayer() const {
   return player_;
 }
+
 bool Engine::isTwoPlayer() const { return is_two_player_; }
+
 bool Engine::canSpawnBall() const { return can_spawn_ball_; }
+
 bool Engine::isStarted() const { return hasStarted; }
 
 void Engine::initialize() {
@@ -208,17 +211,18 @@ void Engine::updateBodies() {
     }
     b2Body* next = body->GetNext();
     b2Vec2 position = body->GetPosition();
+
+    if(body->GetUserData() == "player") {
+      if (position.x > (kWIDTH - kPLAYER_SIZE) / PPM) {
+        body->SetLinearVelocity(b2Vec2(0, 0));
+      } else if (position.x < kPLAYER_SIZE / PPM) {
+        body->SetLinearVelocity(b2Vec2(0, 0));
+      }
+    }
+
     if (position.x > kWIDTH / PPM || position.x < 0.0f / PPM) {
-      if(body->GetUserData() == "player") {
-        if (position.x > kWIDTH / PPM) {
-          body->SetLinearVelocity(b2Vec2(0,0));
-        } else if (position.x < 0.0f / PPM) {
-          body->SetLinearVelocity(b2Vec2(0,0));
-        }
-      } else {
         world->DestroyBody(body);
         body = next;
-      }
     }
 
     if (body->GetUserData() == "player") {
