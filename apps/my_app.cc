@@ -227,7 +227,6 @@ void MyApp::DrawGameOver() {
     ss << player.score  << " sec";
     PrintText(ss.str(), color, size, {center.x, (++row) * 50});
   }
-
   printed_game_over_ = true;
 }
 
@@ -239,15 +238,15 @@ void MyApp::DrawHighScores() {
   const cinder::ivec2 size = {500, 50};
   const Color color = Color::white();
 
-  top_players_ = leaderboard_.RetrieveHighScores(kLimit);
-  if (top_players_.empty()) {
+  std::vector<fallingBalls::Player> scores = leaderboard_.RetrieveHighScores(kLimit);
+  if (scores.empty()) {
     PrintText("No High Scores Yet!", color, size, center);
     return;
   }
 
   size_t row = 0;
   PrintText("High Scores", color, size, center);
-  for (const fallingBalls::Player& player : top_players_) {
+  for (const fallingBalls::Player& player : scores) {
     std::stringstream ss;
     ss << player.name << " - " << player.score << " sec";
     PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
@@ -257,6 +256,7 @@ void MyApp::DrawHighScores() {
 }
 
 void MyApp::resetDrawings() {
+  top_players_ = {};
   viewing_scores_ = false;
   printed_game_over_ = false;
   printed_high_scores_ = false;
